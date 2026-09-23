@@ -5,6 +5,7 @@
 import type { AgentProviderSessionMetadata } from './agent-session-resume'
 import type { OrchestrationFleetAttention } from './orchestration-fleet-attention'
 import type { AgentStatusRowFacets } from './agent-status-observation'
+import type { AgentChildWorkView } from './agent-status-child-work-view'
 import type { TuiAgent } from './tui-agent'
 import {
   normalizeInteractivePromptField,
@@ -149,6 +150,9 @@ export type AgentStatusEntry = {
   /** Live in-process subagents/teammates of this pane's session. Absent when
    *  none are tracked; the sidebar derives indented child rows from it. */
   subagents?: AgentSubagentSnapshot[]
+  /** The host's child-work views for this session, when it publishes them; child rows then read
+   *  these instead of `subagents`. Absent from older hosts. */
+  children?: AgentChildWorkView[]
   /** Provider-owned conversation/session id captured from hook payloads.
    *  Used only for exact CLI resume; Orca terminal ids are not agent-session ids. */
   providerSession?: AgentProviderSessionMetadata
