@@ -35,9 +35,11 @@ export abstract class AgentHookServerIngestStructured extends AgentHookServerIng
     }
     const previous = this.canonicalStatusStore.getParent(parsed)
     const priorStatus = previous?.status
+    // The host's own child records, not the summary's lossy task list: the summary is derived
+    // from these records, and reading them here keeps the row and every view of it on one source.
     const { state, workingMode, fromChildWork } = structuredAgentSessionAgentStatus({
       status: summary.status,
-      backgroundTasks: summary.backgroundTasks
+      childWork: this.canonicalStatusStore.getChildren(parsed)
     })
     const tabId = structuredAgentSessionTabId(parsed.sessionId)
     const paneKey = structuredAgentSessionPaneKey(tabId, parsed.sessionId)

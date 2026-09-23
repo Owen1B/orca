@@ -204,7 +204,7 @@ export function adapterFor(
   initTimeoutMs?: number,
   readTranscriptLeaf?: ClaudeStructuredSessionAdapterDeps['readTranscriptLeaf'],
   persistHandle?: ClaudeStructuredSessionAdapterDeps['persistHandle'],
-  onBackgroundTasksChanged?: ClaudeStructuredSessionAdapterDeps['onBackgroundTasksChanged'],
+  onChildWorkEvidence?: ClaudeStructuredSessionAdapterDeps['onChildWorkEvidence'],
   onDispatchSettledLate?: ClaudeStructuredSessionAdapterDeps['onDispatchSettledLate']
 ): ClaudeStructuredSessionAdapter {
   return new ClaudeStructuredSessionAdapter({
@@ -228,7 +228,7 @@ export function adapterFor(
       (async (handle) => {
         persistedHandles.push(handle)
       }),
-    ...(onBackgroundTasksChanged ? { onBackgroundTasksChanged } : {}),
+    ...(onChildWorkEvidence ? { onChildWorkEvidence } : {}),
     ...(onDispatchSettledLate ? { onDispatchSettledLate } : {}),
     ...(readTranscriptLeaf ? { readTranscriptLeaf } : {})
   })

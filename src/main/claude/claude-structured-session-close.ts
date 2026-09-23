@@ -14,7 +14,6 @@ import {
 import type { ClaudeStreamJsonConnection } from './claude-stream-json-connection'
 import type { ClaudeJournalTranslator } from './claude-structured-journal-translation'
 import type { ClaudePromptRegistry } from './claude-structured-prompt-replies'
-import type { AgentSessionBackgroundTaskState } from '../../shared/agent-session-wire'
 import { closeProcessRegistry } from '../../shared/child-process/close-process-registry'
 import { retireClaudeDispatchWaiters } from './claude-structured-dispatch'
 import { readClaudeTranscriptLeafWithReproof } from './claude-transcript-branch-proof'
@@ -76,10 +75,6 @@ type CloseClaudePublishedSessionInput = {
     fence: number
   }) => Promise<void>
   onEvent?: (event: ClaudeStructuredSessionEvent) => void
-  onBackgroundTasksChanged?: (
-    sessionId: string,
-    state: AgentSessionBackgroundTaskState | null
-  ) => void
   readTranscriptLeaf?: (input: {
     providerSessionId: string
     previousLeafUuid: string | null
@@ -110,9 +105,8 @@ async function finalizeClaudePublishedSession(
     }
     return false
   }
-  if (session.backgroundTasks.clear()) {
-    input.onBackgroundTasksChanged?.(input.sessionId, null)
-  }
+  // Queues the session's ending for the host's child records; the adapter delivers it after close.
+  session.backgroundTasks.clear()
   try {
     const transcriptLeaf = input.readTranscriptLeaf
       ? await readClaudeTranscriptLeafWithReproof({
@@ -236,10 +230,6 @@ export function closeClaudePublishedSessionForDeps(
       fence: number
     }) => Promise<void>
     onEvent?: (event: ClaudeStructuredSessionEvent) => void
-    onBackgroundTasksChanged?: (
-      sessionId: string,
-      state: AgentSessionBackgroundTaskState | null
-    ) => void
     readTranscriptLeaf?: (input: {
       providerSessionId: string
       previousLeafUuid: string | null
@@ -261,10 +251,6 @@ export async function closeClaudeSession(input: {
     fence: number
   }) => Promise<void>
   onEvent?: (event: ClaudeStructuredSessionEvent) => void
-  onBackgroundTasksChanged?: (
-    sessionId: string,
-    state: AgentSessionBackgroundTaskState | null
-  ) => void
   readTranscriptLeaf?: (input: {
     providerSessionId: string
     previousLeafUuid: string | null
