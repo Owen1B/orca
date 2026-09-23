@@ -16413,6 +16413,10 @@
         "days": "{{value0}} j",
         "underOneMinute": "<1 min"
       }
+    },
+    "agentChildRow": {
+      "ended": "Terminé",
+      "endedAgo": "terminé il y a {{value0}}"
     }
   },
   "dashboardPopout": {
