@@ -30,6 +30,7 @@ const CODEX_RECAP_PROMPT = 'Write a brief catch-up for a user returning to this 
 function isCodexRecap(
   status:
     | {
+        state?: string
         agentType?: string
         prompt?: string
         lastAssistantMessage?: string
@@ -37,6 +38,7 @@ function isCodexRecap(
     | undefined
 ): boolean {
   if (
+    status?.state !== 'done' ||
     status?.agentType !== 'codex' ||
     !status.prompt?.startsWith(CODEX_RECAP_PROMPT) ||
     !status.lastAssistantMessage
